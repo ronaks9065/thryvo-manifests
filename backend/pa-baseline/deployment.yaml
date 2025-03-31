@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pa-baseline-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pa-baseline
+  template:
+    metadata:
+      labels:
+        app: pa-baseline
+    spec:
+      containers:
+      - name: pa-baseline-container
+        image: 691139898020.dkr.ecr.ap-south-1.amazonaws.com/backend:pa-baseline
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pa-baseline-service
+spec:
+  selector:
+    app: pa-baseline
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+  type: ClusterIP
