@@ -16,7 +16,7 @@ spec:
       - name: thryvo-secret
       containers:
       - name: pa-baseline-container
-        image: 691139898020.dkr.ecr.ap-south-1.amazonaws.com/backend:pa-baseline
+        image: caxdevacrpa0.azurecr.io/cax_pa-baseline_dev:5636
         ports:
         - containerPort: 3000
 ---
