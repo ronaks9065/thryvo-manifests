@@ -16,7 +16,7 @@ spec:
       - name: thryvo-secret
       containers:
       - name: bff-container
-        image: 691139898020.dkr.ecr.ap-south-1.amazonaws.com/backend:bff
+        image: bff:5576
         ports:
         - containerPort: 4000
 ---
