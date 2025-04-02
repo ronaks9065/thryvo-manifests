@@ -16,7 +16,7 @@ spec:
       - name: thryvo-secret
       containers:
       - name: pa-authz-container
-        image: 691139898020.dkr.ecr.ap-south-1.amazonaws.com/backend:pa-authz
+        image: caxdevacrpa0.azurecr.io/cax_pa-authz_dev:5637
         ports:
         - containerPort: 3015
 ---
