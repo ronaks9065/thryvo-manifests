@@ -16,7 +16,7 @@ spec:
       - name: thryvo-secret
       containers:
       - name: bff-container
-        image: bff:5576
+        image: caxdevacrpa0.azurecr.io/cax_bff_dev:5576
         ports:
         - containerPort: 4000
 ---
