@@ -1,0 +1,113 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: databases
+
+---
+# Using local storage for kubeadm cluster
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage-mysql
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
+
+---
+# Create PV using hostPath for local kubeadm cluster
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-local-pv
+spec:
+  capacity:
+    storage: 4Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage-mysql
+  local:
+    path: /mnt/data/mysql
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - YOUR_NODE_NAME  # Replace with actual node name
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-local-pvc
+  namespace: databases
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: local-storage-mysql
+  resources:
+    requests:
+      storage: 4Gi
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: databases
+spec:
+  serviceName: mysql
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: caxdevacrpa0.azurecr.io/cax_mysql_dev:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: password123
+        - name: MYSQL_DATABASE
+          value: thryvo
+        ports:
+        - containerPort: 3306
+          name: mysql
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        volumeMounts:
+        - mountPath: "/var/lib/mysql"
+          name: mysql-data
+      volumes:
+      - name: mysql-data
+        persistentVolumeClaim:
+          claimName: mysql-local-pvc
+      imagePullSecrets:
+      - name: thryvo-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: databases
+spec:
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP
