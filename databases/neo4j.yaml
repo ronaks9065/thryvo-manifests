@@ -166,4 +166,5 @@ spec:
       protocol: TCP
       port: 7687
       targetPort: 7687
+      nodePort: 31984
   type: NodePort
