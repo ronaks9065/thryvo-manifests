@@ -1,34 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bff-deployment
+  name: thryvo-ui-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: bff
+      app: thryvo-ui
   template:
     metadata:
       labels:
-        app: bff
+        app: thryvo-ui
     spec:
       imagePullSecrets:
       - name: thryvo-secret
       containers:
-      - name: bff-container
-        image: caxdevacrpa0.azurecr.io/cax_bff_dev:5576
+      - name: thryvo-ui-container
+        image: caxdevacrpa0.azurecr.io/cax_shell_app_dev:5756
         ports:
-        - containerPort: 4000
+        - containerPort: 8000
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: bff-service
+  name: thryvo-ui-service
 spec:
   selector:
-    app: bff
+    app: thryvo-ui
   ports:
   - protocol: TCP
-    port: 4000
-    targetPort: 4000
+    port: 8000
+    targetPort: 8000
   type: NodePort
