@@ -31,4 +31,5 @@ spec:
   - protocol: TCP
     port: 3015
     targetPort: 3015
+    nodePort: 31002
   type: NodePort
