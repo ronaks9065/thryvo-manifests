@@ -161,10 +161,10 @@ spec:
       protocol: TCP
       port: 7474
       targetPort: 7474
-      nodePort: 31983
+      nodePort: 32000
     - name: bolt
       protocol: TCP
       port: 7687
       targetPort: 7687
-      nodePort: 31984
+      nodePort: 32001
   type: NodePort
